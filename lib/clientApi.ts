@@ -1,27 +1,5 @@
 import type { Expense, FutureEntry, Obligation, PayCycle, User } from "./types";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api";
-
-async function request<T>(path: string, options: RequestInit = {}, token?: string): Promise<T> {
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-    ...(options.headers as Record<string, string>),
-  };
-
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
-  const response = await fetch(`${API_URL}${path}`, { ...options, headers });
-  const data = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    const message = (data && data.message) || "Erro inesperado";
-    throw new Error(message);
-  }
-
-  return data as T;
-}
+import { request } from "./clientApiBase";
 
 type AuthPayload = { name?: string; email: string; password: string };
 type AuthResponse = { token: string; user: User };

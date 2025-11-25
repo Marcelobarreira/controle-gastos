@@ -514,6 +514,9 @@ video {
 .inset-0 {
   inset: 0px;
 }
+.inset-\[18\%\] {
+  inset: 18%;
+}
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -536,6 +539,9 @@ video {
 .h-full {
   height: 100%;
 }
+.h-\[320px\] {
+  height: 320px;
+}
 .w-full {
   width: 100%;
 }
@@ -544,6 +550,9 @@ video {
 }
 .max-w-7xl {
   max-width: 80rem;
+}
+.max-w-\[320px\] {
+  max-width: 320px;
 }
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -554,11 +563,20 @@ video {
 .flex-col {
   flex-direction: column;
 }
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.items-end {
+  align-items: flex-end;
+}
 .items-center {
   align-items: center;
 }
 .justify-end {
   justify-content: flex-end;
+}
+.justify-center {
+  justify-content: center;
 }
 .justify-between {
   justify-content: space-between;
@@ -647,6 +665,10 @@ video {
 .bg-white\/5 {
   background-color: rgb(255 255 255 / 0.05);
 }
+.bg-slate-950 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(2 6 23 / var(--tw-bg-opacity, 1));
+}
 .p-2 {
   padding: 0.5rem;
 }
@@ -683,6 +705,9 @@ video {
 }
 .pt-8 {
   padding-top: 2rem;
+}
+.text-center {
+  text-align: center;
 }
 .text-2xl {
   font-size: 1.5rem;
@@ -1267,6 +1292,10 @@ button.danger:hover {
 
 @media (min-width: 768px) {
 
+  .md\:col-span-3 {
+    grid-column: span 3 / span 3;
+  }
+
   .md\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1286,6 +1315,10 @@ button.danger:hover {
 }
 
 @media (min-width: 1024px) {
+
+  .lg\:col-span-2 {
+    grid-column: span 2 / span 2;
+  }
 
   .lg\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));

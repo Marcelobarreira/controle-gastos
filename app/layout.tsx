@@ -5,7 +5,10 @@ export const metadata: Metadata = {
   title: "Controle de Gastos",
   description: "Veja para onde seu dinheiro vai e planeje o mês sem sustos",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", rel: "icon", type: "image/x-icon" },
+      { url: "/favicon.ico", rel: "shortcut icon", type: "image/x-icon" },
+    ],
   },
 };
 

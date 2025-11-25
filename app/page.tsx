@@ -608,7 +608,7 @@ export default function App() {
     return { cycle, fixed, variable, total: fixed + variable };
   });
   return (
-    <div className="max-w-7xl mx-auto px-4 pb-10 pt-8 space-y-6">
+    <div id="painel" className="max-w-7xl mx-auto px-4 pb-10 pt-8 space-y-6">
       <div className="glass p-6 md:p-8 space-y-3">
         <p className="uppercase tracking-[0.08em] text-emerald-300 text-xs">Controle de Gastos</p>
         <h1 className="text-3xl md:text-4xl font-bold text-slate-50">
@@ -617,6 +617,14 @@ export default function App() {
         <p className="text-slate-300 max-w-3xl">
           Cadastre suas despesas, obrigações fixas e defina seu salário para ter clareza do que sobra.
         </p>
+        <div className="flex flex-wrap gap-3">
+          <Link href="#painel" className="button-ghost">
+            Ir para painel
+          </Link>
+          <Link href="/separador" className="button-ghost">
+            Separador de gastos
+          </Link>
+        </div>
       </div>
       {!isAuthenticated ? (
         <section className="glass p-6 space-y-4 max-w-3xl mx-auto">
@@ -1139,16 +1147,21 @@ export default function App() {
                 ))}
               </ul>
             )}
-          </section>
-          <section className="glass p-5 space-y-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="uppercase tracking-[0.08em] text-emerald-300 text-xs">Despesas variáveis</p>
-                <h3 className="text-lg font-semibold text-slate-50">Controle rápido</h3>
+            </section>
+            <section className="glass p-5 space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="uppercase tracking-[0.08em] text-emerald-300 text-xs">Despesas variáveis</p>
+                  <h3 className="text-lg font-semibold text-slate-50">Controle rápido</h3>
+                </div>
+              <div className="flex gap-2">
+                <Link href="/separador" className="button-ghost">
+                  Separador de gastos
+                </Link>
+                <button className="button-ghost" onClick={loadExpenses}>
+                  Atualizar
+                </button>
               </div>
-              <button className="button-ghost" onClick={loadExpenses}>
-                Atualizar
-              </button>
             </div>
             {expenses.length === 0 ? (
               <p className="text-slate-300 text-sm">Nenhuma despesa cadastrada ainda.</p>
