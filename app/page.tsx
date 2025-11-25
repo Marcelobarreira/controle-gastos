@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   login,
@@ -695,6 +696,29 @@ export default function App() {
                   Sair
                 </button>
               </div>
+              <div className="space-y-2">
+                <p className="text-sm text-slate-200">Visão rápida do mês</p>
+                <div className="h-3 w-full rounded-full bg-white/10 overflow-hidden flex">
+                  <div className="h-full bg-rose-400" style={{ width: `${fixedPercent}%` }} />
+                  <div className="h-full bg-sky-400" style={{ width: `${variablePercent}%` }} />
+                  <div className="h-full bg-emerald-300" style={{ width: `${remainingPercent}%` }} />
+                </div>
+                <div className="flex justify-between text-xs text-slate-400">
+                  <span>Fixas: R$ {totalObligations.toFixed(2)}</span>
+                  <span>Variáveis: R$ {totalExpenses.toFixed(2)}</span>
+                  <span>Sobra: R$ {Math.max(0, remaining).toFixed(2)}</span>
+                </div>
+                {totalsByCycle.length > 0 && (
+                  <div className="grid grid-cols-2 gap-2 text-xs text-slate-200">
+                    {totalsByCycle.slice(0, 2).map(({ cycle, total }) => (
+                      <div key={cycle.id} className="glass p-2 rounded-lg border border-white/10 bg-white/5">
+                        <p className="font-semibold text-slate-50">{cycle.name}</p>
+                        <p className="text-slate-400">Dia {cycle.payDay} • R$ {total.toFixed(2)}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </section>
             <section className="glass p-5 space-y-3">
               <h3 className="text-lg font-semibold text-slate-50">Salário e meta do mês</h3>
@@ -839,11 +863,14 @@ export default function App() {
                         Fixas: R$ {fixed.toFixed(2)} - Variáveis: R$ {variable.toFixed(2)} - Total: R$ {total.toFixed(2)}
                       </p>
                     </div>
-                    {salary > 0 && (
-                      <div>
+                    <div className="row items-center">
+                      {salary > 0 && (
                         <p className="muted">Cobertura: {Math.min(100, (total / salary) * 100).toFixed(0)}%</p>
-                      </div>
-                    )}
+                      )}
+                      <Link className="button-ghost" href={`/ciclos/${cycle.id}`}>
+                        Ver ciclo
+                      </Link>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -865,13 +892,6 @@ export default function App() {
             }}
             onDelete={handleDeleteFuture}
             summary={futureSummary}
-          />
-          <CalendarPlanner
-            start={calendarRange.start}
-            end={calendarRange.end}
-            onChange={setCalendarRange}
-            days={calendarData.days}
-            summary={{ total: calendarData.total, average: calendarData.average, highestDay: calendarData.highestDay }}
           />
           <div className="grid gap-4 xl:grid-cols-3">
             <section className="glass p-5 space-y-3">
@@ -1076,6 +1096,13 @@ export default function App() {
               </form>
             </section>
           </div>
+          <CalendarPlanner
+            start={calendarRange.start}
+            end={calendarRange.end}
+            onChange={setCalendarRange}
+            days={calendarData.days}
+            summary={{ total: calendarData.total, average: calendarData.average, highestDay: calendarData.highestDay }}
+          />
           <section className="glass p-5 space-y-3">
             <div className="flex items-center justify-between">
               <div>
