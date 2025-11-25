@@ -8,7 +8,7 @@ export const revalidate = 0;
 export const runtime = "nodejs";
 
 export async function GET() {
-  return NextResponse.json({ message: "Use POST para registrar" }, { status: 405, headers: { Allow: "POST" } });
+  return NextResponse.json({ ok: true, message: "Use POST para registrar" });
 }
 
 export async function POST(req: NextRequest) {
