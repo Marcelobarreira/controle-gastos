@@ -1,13 +1,12 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/separador/page": "app/separador/page.js",
   "/page": "app/page.js",
-  "/api/profile/me/route": "app/api/profile/me/route.js",
-  "/api/envelopes/route": "app/api/envelopes/route.js",
-  "/api/envelopes/[id]/route": "app/api/envelopes/[id]/route.js",
   "/api/expenses/route": "app/api/expenses/route.js",
-  "/api/envelopes/[id]/allocations/[allocationId]/route": "app/api/envelopes/[id]/allocations/[allocationId]/route.js",
+  "/api/profile/me/route": "app/api/profile/me/route.js",
+  "/api/future-entries/route": "app/api/future-entries/route.js",
   "/api/obligations/route": "app/api/obligations/route.js",
   "/api/pay-cycles/route": "app/api/pay-cycles/route.js",
-  "/api/future-entries/route": "app/api/future-entries/route.js"
+  "/separador/page": "app/separador/page.js",
+  "/api/envelopes/route": "app/api/envelopes/route.js",
+  "/api/envelopes/[id]/allocations/route": "app/api/envelopes/[id]/allocations/route.js"
 }

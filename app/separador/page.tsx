@@ -48,6 +48,9 @@ export default function SeparadorPage() {
     try {
       const items = await fetchEnvelopes(token!);
       setEnvelopes(items);
+      if (!activeEnvelopeId && items.length > 0) {
+        setActiveEnvelopeId(items[0].id);
+      }
     } catch (err: any) {
       setError(err?.message || "Erro ao carregar envelopes");
     }
@@ -86,7 +89,8 @@ export default function SeparadorPage() {
 
   async function handleAddAllocation(e: React.FormEvent) {
     e.preventDefault();
-    if (!token || !activeEnvelopeId) return;
+    const envelopeId = activeEnvelopeId || selected?.id;
+    if (!token || !envelopeId) return;
     const amount = parseFloat(allocationForm.amount);
     if (Number.isNaN(amount) || !allocationForm.title.trim()) {
       setError("Título e valor são obrigatórios.");
@@ -94,12 +98,12 @@ export default function SeparadorPage() {
     }
     setLoading(true);
     try {
-      const updated = await addAllocation(token, activeEnvelopeId, {
+      const updated = await addAllocation(token, envelopeId, {
         title: allocationForm.title.trim(),
         amount,
         date: allocationForm.date || undefined,
       });
-      setEnvelopes((prev) => prev.map((env) => (env.id === activeEnvelopeId ? updated : env)));
+      setEnvelopes((prev) => prev.map((env) => (env.id === envelopeId ? updated : env)));
       setAllocationForm({ title: "", amount: "", date: "" });
     } catch (err: any) {
       setError(err?.message || "Erro ao registrar gasto no envelope");

@@ -536,11 +536,11 @@ video {
 .h-3 {
   height: 0.75rem;
 }
-.h-full {
-  height: 100%;
-}
 .h-\[320px\] {
   height: 320px;
+}
+.h-full {
+  height: 100%;
 }
 .w-full {
   width: 100%;
@@ -659,15 +659,15 @@ video {
 .bg-slate-900\/90 {
   background-color: rgb(15 23 42 / 0.9);
 }
+.bg-slate-950 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(2 6 23 / var(--tw-bg-opacity, 1));
+}
 .bg-white\/10 {
   background-color: rgb(255 255 255 / 0.1);
 }
 .bg-white\/5 {
   background-color: rgb(255 255 255 / 0.05);
-}
-.bg-slate-950 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(2 6 23 / var(--tw-bg-opacity, 1));
 }
 .p-2 {
   padding: 0.5rem;
