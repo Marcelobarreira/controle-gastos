@@ -1,16 +1,16 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
   "/page": "app/page.js",
-  "/api/auth/register/route": "app/api/auth/register/route.js",
   "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/auth/register/route": "app/api/auth/register/route.js",
   "/api/expenses/route": "app/api/expenses/route.js",
   "/api/expenses/[id]/route": "app/api/expenses/[id]/route.js",
   "/api/future-entries/route": "app/api/future-entries/route.js",
-  "/api/obligations/[id]/route": "app/api/obligations/[id]/route.js",
   "/api/pay-cycles/[id]/route": "app/api/pay-cycles/[id]/route.js",
   "/api/future-entries/[id]/route": "app/api/future-entries/[id]/route.js",
+  "/api/obligations/[id]/route": "app/api/obligations/[id]/route.js",
+  "/api/profile/me/route": "app/api/profile/me/route.js",
   "/api/pay-cycles/route": "app/api/pay-cycles/route.js",
   "/api/profile/salary/route": "app/api/profile/salary/route.js",
-  "/api/profile/me/route": "app/api/profile/me/route.js",
   "/api/obligations/route": "app/api/obligations/route.js"
 }

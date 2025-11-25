@@ -5,6 +5,11 @@ import { generateToken } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+export const runtime = "nodejs";
+
+export async function GET() {
+  return NextResponse.json({ message: "Use POST para registrar" }, { status: 405, headers: { Allow: "POST" } });
+}
 
 export async function POST(req: NextRequest) {
   const { name, email, password } = await req.json();
