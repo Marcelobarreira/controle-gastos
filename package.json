@@ -1,33 +1,35 @@
 {
-  "name": "backend",
+  "name": "controle-gastos",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "App fullstack Next.js + Prisma",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "start": "node src/index.js",
-    "prisma:migrate": "prisma migrate dev --name init",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "prisma:generate": "prisma generate",
-    "client:install": "npm --prefix client install",
-    "client:dev": "npm --prefix client run dev -- --host --port 5173",
-    "client:build": "npm --prefix client run build",
-    "build": "npm run client:build && npm run prisma:generate",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prisma:push": "prisma db push"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "@prisma/client": "^5.19.1",
     "bcryptjs": "^3.0.3",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "^5.19.1"
+    "next": "14.2.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^22.7.4",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "prisma": "^5.19.1",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.3"
   }
 }
