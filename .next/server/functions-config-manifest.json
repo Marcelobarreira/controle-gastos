@@ -1,0 +1,1 @@
+{"version":1,"functions":{"/api/auth/register":{},"/api/expenses":{},"/api/expenses/[id]":{},"/api/auth/login":{},"/api/obligations/[id]":{},"/api/future-entries/[id]":{},"/api/pay-cycles/[id]":{},"/api/profile/me":{},"/api/pay-cycles":{},"/api/profile/salary":{},"/api/obligations":{},"/api/future-entries":{}}}

@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/auth";
 import { formatFutureEntry } from "@/lib/formatFutureEntry";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const VALID_TYPES = ["expense", "income"];
 
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {

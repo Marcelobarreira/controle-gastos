@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/auth";
 import { formatExpense } from "@/lib/formatExpense";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   const userId = verifyToken(req.headers.get("authorization"));
   if (!userId) return NextResponse.json({ message: "Não autorizado" }, { status: 401 });
