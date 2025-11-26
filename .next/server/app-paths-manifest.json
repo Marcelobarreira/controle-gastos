@@ -1,10 +1,8 @@
 {
   "/page": "app/page.js",
-  "/separador/page": "app/separador/page.js",
-  "/api/profile/me/route": "app/api/profile/me/route.js",
   "/api/envelopes/route": "app/api/envelopes/route.js",
+  "/api/profile/me/route": "app/api/profile/me/route.js",
   "/api/pay-cycles/route": "app/api/pay-cycles/route.js",
-  "/api/expenses/route": "app/api/expenses/route.js",
-  "/api/obligations/route": "app/api/obligations/route.js",
-  "/api/future-entries/route": "app/api/future-entries/route.js"
+  "/api/extra-income/route": "app/api/extra-income/route.js",
+  "/separador/page": "app/separador/page.js"
 }

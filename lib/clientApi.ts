@@ -1,4 +1,4 @@
-import type { Expense, FutureEntry, Obligation, PayCycle, User } from "./types";
+import type { Expense, FutureEntry, Obligation, PayCycle, User, ExtraIncome } from "./types";
 import { request } from "./clientApiBase";
 
 type AuthPayload = { name?: string; email: string; password: string };
@@ -70,7 +70,10 @@ export function fetchPayCycles(token: string): Promise<PayCycle[]> {
   return request<PayCycle[]>("/pay-cycles", { method: "GET" }, token);
 }
 
-export function createPayCycle(token: string, payload: { name: string; payDay: number }): Promise<PayCycle> {
+export function createPayCycle(
+  token: string,
+  payload: { name: string; payDay: number; salaryAmount?: number | null }
+): Promise<PayCycle> {
   return request<PayCycle>("/pay-cycles", { method: "POST", body: JSON.stringify(payload) }, token);
 }
 
@@ -84,6 +87,25 @@ export function updatePayCycle(
   payload: { name?: string; payDay?: number; salaryAmount?: number | null }
 ): Promise<PayCycle> {
   return request<PayCycle>(`/pay-cycles/${id}`, { method: "PUT", body: JSON.stringify(payload) }, token);
+}
+
+export function fetchExtraIncome(token: string, payCycleId?: string | number | null): Promise<ExtraIncome[]> {
+  const search =
+    payCycleId === undefined || payCycleId === null || payCycleId === ""
+      ? ""
+      : `?payCycleId=${encodeURIComponent(String(payCycleId))}`;
+  return request<ExtraIncome[]>(`/extra-income${search}`, { method: "GET" }, token);
+}
+
+export function createExtraIncome(
+  token: string,
+  payload: { title: string; amount: number; date?: string; payCycleId?: number | null }
+): Promise<ExtraIncome> {
+  return request<ExtraIncome>("/extra-income", { method: "POST", body: JSON.stringify(payload) }, token);
+}
+
+export function deleteExtraIncome(token: string, id: number): Promise<void> {
+  return request<void>(`/extra-income/${id}`, { method: "DELETE" }, token);
 }
 
 export function fetchFutureEntries(token: string): Promise<FutureEntry[]> {

@@ -50,3 +50,14 @@ export type FutureEntry = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type ExtraIncome = {
+  id: number;
+  title: string;
+  amount: number;
+  date: string;
+  userId: number;
+  payCycleId?: number | null;
+  createdAt: string;
+  updatedAt: string;
+};
