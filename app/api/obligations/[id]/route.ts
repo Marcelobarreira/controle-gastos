@@ -79,7 +79,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       return NextResponse.json({ message: "Obrigação não encontrada" }, { status: 404 });
     }
     await prisma.obligation.delete({ where: { id: obligationId } });
-    return NextResponse.json({}, { status: 204 });
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error("Erro ao excluir obrigação", error);
     return NextResponse.json({ message: "Erro interno ao excluir obrigação" }, { status: 500 });

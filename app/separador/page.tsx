@@ -11,7 +11,7 @@ import {
   fetchEnvelopes,
 } from "@/lib/envelopesClient";
 import type { EnvelopeDTO } from "@/lib/typesEnvelope";
-import { fetchProfile } from "@/lib/clientApi";
+import { fetchProfile, fetchPayCycles } from "@/lib/clientApi";
 
 const getInitialToken = () => (typeof window === "undefined" ? null : localStorage.getItem("token"));
 
@@ -24,6 +24,8 @@ export default function SeparadorPage() {
   const [allocationForm, setAllocationForm] = useState({ title: "", amount: "", date: "" });
   const [activeEnvelopeId, setActiveEnvelopeId] = useState<number | null>(null);
   const [salary, setSalary] = useState<number>(0);
+  const [payCycles, setPayCycles] = useState<{ id: number; name: string; payDay: number }[]>([]);
+  const [selectedCycle, setSelectedCycle] = useState<string>("all");
 
   const toNumber = (value: any) => {
     const n = Number(value);
@@ -36,17 +38,20 @@ export default function SeparadorPage() {
       try {
         const profile = await fetchProfile(token);
         setSalary(toNumber(profile.salary || 0));
+        const cycles = await fetchPayCycles(token);
+        setPayCycles(cycles);
       } catch (_err) {
         setSalary(0);
       }
     })();
     loadEnvelopes();
-  }, [token]);
+  }, [token, selectedCycle]);
 
   async function loadEnvelopes() {
     setError("");
     try {
-      const items = await fetchEnvelopes(token!);
+      const cycleParam = selectedCycle === "all" ? undefined : selectedCycle;
+      const items = await fetchEnvelopes(token!, cycleParam);
       setEnvelopes(items);
       if (!activeEnvelopeId && items.length > 0) {
         setActiveEnvelopeId(items[0].id);
@@ -161,11 +166,30 @@ export default function SeparadorPage() {
   const allocated = selected?.allocations?.reduce((sum, a) => sum + a.amount, 0) || 0;
   const budget = selected?.budget || 0;
   const remaining = budget - allocated;
-  const allocatedTotal = envelopes.reduce(
+  const selectedCycleId = selectedCycle !== "all" && !Number.isNaN(Number(selectedCycle)) ? Number(selectedCycle) : null;
+  const selectedCycleSalary =
+    selectedCycleId && payCycles.find((c) => c.id === selectedCycleId)?.salaryAmount
+      ? toNumber(payCycles.find((c) => c.id === selectedCycleId)!.salaryAmount)
+      : null;
+  const filteredEnvelopes =
+    selectedCycleId != null
+      ? envelopes.filter((env) => env.payCycleId === selectedCycleId)
+      : envelopes;
+  const allocatedTotal = filteredEnvelopes.reduce(
     (sum, env) => sum + (env.allocations?.reduce((s, a) => s + a.amount, 0) || 0),
     0
   );
-  const salaryRemaining = salary - allocatedTotal;
+  const cycleSalarySum = payCycles.reduce(
+    (sum, c) => sum + (c.salaryAmount ? toNumber(c.salaryAmount) : 0),
+    0
+  );
+  const salaryBase =
+    selectedCycleId != null
+      ? selectedCycleSalary ?? salary
+      : cycleSalarySum > 0
+        ? cycleSalarySum
+        : salary;
+  const salaryRemaining = salaryBase - allocatedTotal;
 
   return (
     <div className="page space-y-6">
@@ -185,7 +209,7 @@ export default function SeparadorPage() {
       <div className="glass p-4 rounded-xl border border-white/10 bg-white/5 grid gap-3 md:grid-cols-3">
         <div>
           <p className="text-xs text-slate-400 uppercase">Salário</p>
-          <p className="text-lg font-semibold text-slate-50">R$ {salary.toFixed(2)}</p>
+          <p className="text-lg font-semibold text-slate-50">R$ {salaryBase.toFixed(2)}</p>
         </div>
         <div>
           <p className="text-xs text-slate-400 uppercase">Gastos em envelopes</p>
@@ -199,21 +223,21 @@ export default function SeparadorPage() {
           <div
             className="mx-auto w-full max-w-[320px] h-[320px] rounded-full bg-white/5 border border-white/10 flex items-center justify-center relative"
             style={{
-              background: `conic-gradient(#22c55e ${Math.max(0, Math.min(100, (salaryRemaining / (salary || 1)) * 100))}% , #f43f5e 0)`,
+              background: `conic-gradient(#22c55e ${Math.max(0, Math.min(100, (salaryRemaining / (salaryBase || 1)) * 100))}% , #f43f5e 0)`,
             }}
           >
             <div className="absolute inset-[18%] rounded-full bg-slate-950 border border-white/10 flex flex-col items-center justify-center text-center px-4">
               <p className="text-xs text-slate-400">Disponível</p>
               <p className="text-xl font-bold text-emerald-300">R$ {salaryRemaining.toFixed(2)}</p>
-              <p className="text-xs text-slate-400">de R$ {salary.toFixed(2)}</p>
+              <p className="text-xs text-slate-400">de R$ {salaryBase.toFixed(2)}</p>
             </div>
           </div>
         </div>
       </div>
 
       <div className="glass p-4 space-y-3">
-        <h2 className="text-lg font-semibold text-slate-50">Criar novo envelope</h2>
-        <form onSubmit={handleCreateEnvelope} className="grid gap-3 md:grid-cols-3 items-end">
+          <h2 className="text-lg font-semibold text-slate-50">Criar novo envelope</h2>
+        <form onSubmit={handleCreateEnvelope} className="grid gap-3 md:grid-cols-4 items-end">
           <label className="space-y-1 text-sm text-slate-200">
             Título
             <input
@@ -237,6 +261,21 @@ export default function SeparadorPage() {
               required
             />
           </label>
+          <label className="space-y-1 text-sm text-slate-200">
+            Salário / Ciclo
+            <select
+              className="input"
+              value={selectedCycle}
+              onChange={(e) => setSelectedCycle(e.target.value)}
+            >
+              <option value="all">Todos</option>
+              {payCycles.map((cycle) => (
+                <option key={cycle.id} value={cycle.id.toString()}>
+                  {cycle.name} (dia {cycle.payDay})
+                </option>
+              ))}
+            </select>
+          </label>
           <button type="submit" className="button-primary" disabled={loading}>
             {loading ? "Salvando..." : "Adicionar envelope"}
           </button>
@@ -255,7 +294,12 @@ export default function SeparadorPage() {
                 <li key={env.id} className="flex justify-between items-center gap-2">
                   <div>
                     <p className="description">{env.title}</p>
-                    <p className="muted">Reserva: R$ {env.budget.toFixed(2)}</p>
+                    <p className="muted">
+                      Reserva: R$ {env.budget.toFixed(2)}{" "}
+                      {env.payCycleId && (
+                        <span className="text-xs text-slate-400">• Ciclo {env.payCycleId}</span>
+                      )}
+                    </p>
                   </div>
                   <div className="row">
                     <button className="button-ghost" onClick={() => handleSelectEnvelope(env.id)}>

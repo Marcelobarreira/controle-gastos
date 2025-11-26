@@ -13,6 +13,8 @@ export type EnvelopeDTO = {
   title: string;
   budget: number;
   userId: number;
+  payCycleId?: number | null;
+  salaryAmount?: number | null;
   createdAt: string;
   updatedAt: string;
   allocations?: AllocationDTO[];

@@ -2,8 +2,9 @@ import type { SpendingEnvelope } from "@prisma/client";
 import { request } from "./clientApiBase";
 import type { EnvelopeDTO } from "./typesEnvelope";
 
-export function fetchEnvelopes(token: string): Promise<EnvelopeDTO[]> {
-  return request<EnvelopeDTO[]>("/envelopes", { method: "GET" }, token);
+export function fetchEnvelopes(token: string, payCycleId?: string): Promise<EnvelopeDTO[]> {
+  const query = payCycleId ? `?payCycleId=${payCycleId}` : "";
+  return request<EnvelopeDTO[]>(`/envelopes${query}`, { method: "GET" }, token);
 }
 
 export function createEnvelope(token: string, payload: { title: string; budget: number }): Promise<EnvelopeDTO> {

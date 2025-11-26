@@ -30,6 +30,7 @@ export function formatEnvelope(envelope: SpendingEnvelope & { allocations?: Spen
     title: envelope.title,
     budget,
     userId: envelope.userId,
+    payCycleId: envelope.payCycleId ?? null,
     createdAt: envelope.createdAt,
     updatedAt: envelope.updatedAt,
     allocations,

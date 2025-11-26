@@ -33,6 +33,7 @@ export type PayCycle = {
   id: number;
   name: string;
   payDay: number;
+  salaryAmount?: number | null;
   userId: number;
   createdAt: string;
   updatedAt: string;

@@ -34,7 +34,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   const envelopeId = Number(params.id);
   if (Number.isNaN(envelopeId)) return NextResponse.json({ message: "ID inválido" }, { status: 400 });
 
-  const { title, budget } = await req.json();
+  const { title, budget, payCycleId } = await req.json();
   const data: any = {};
   if (title !== undefined) data.title = title;
   if (budget !== undefined) {
@@ -43,6 +43,21 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ message: "Valor inválido" }, { status: 400 });
     }
     data.budget = parsedBudget;
+  }
+  if (payCycleId !== undefined) {
+    if (payCycleId === null || payCycleId === "" || payCycleId === "all") {
+      data.payCycleId = null;
+    } else {
+      const parsedCycle = Number(payCycleId);
+      if (Number.isNaN(parsedCycle)) {
+        return NextResponse.json({ message: "Ciclo inválido" }, { status: 400 });
+      }
+      const cycle = await prisma.payCycle.findUnique({ where: { id: parsedCycle } });
+      if (!cycle || cycle.userId !== userId) {
+        return NextResponse.json({ message: "Ciclo não encontrado" }, { status: 404 });
+      }
+      data.payCycleId = parsedCycle;
+    }
   }
 
   try {

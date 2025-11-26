@@ -78,6 +78,14 @@ export function deletePayCycle(token: string, id: number): Promise<void> {
   return request<void>(`/pay-cycles/${id}`, { method: "DELETE" }, token);
 }
 
+export function updatePayCycle(
+  token: string,
+  id: number,
+  payload: { name?: string; payDay?: number; salaryAmount?: number | null }
+): Promise<PayCycle> {
+  return request<PayCycle>(`/pay-cycles/${id}`, { method: "PUT", body: JSON.stringify(payload) }, token);
+}
+
 export function fetchFutureEntries(token: string): Promise<FutureEntry[]> {
   return request<FutureEntry[]>("/future-entries", { method: "GET" }, token);
 }

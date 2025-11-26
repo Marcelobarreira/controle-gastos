@@ -68,6 +68,8 @@ model SpendingEnvelope {
   budget    Decimal  @db.Decimal(12, 2)
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
+  payCycle  PayCycle? @relation(fields: [payCycleId], references: [id])
+  payCycleId Int?
   allocations SpendingAllocation[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -88,10 +90,12 @@ model PayCycle {
   id        Int      @id @default(autoincrement())
   name      String
   payDay    Int      // dia do mês
+  salaryAmount Decimal? @db.Decimal(12, 2)
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
   expenses  Expense[]
   obligations Obligation[]
+  envelopes SpendingEnvelope[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

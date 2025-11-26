@@ -31,7 +31,7 @@ type ViewMode = "login" | "register";
 const initialForm = { name: "", email: "", password: "" };
 const initialExpense = { description: "", amount: "", category: "", date: "", payCycleId: "" };
 const initialObligation = { title: "", amount: "", category: "", dueDay: "1", payCycleId: "" };
-const initialPayCycle = { name: "", payDay: "1" };
+const initialPayCycle = { name: "", payDay: "1", salaryAmount: "" };
 
 type FutureEntryFormState = { title: string; amount: string; category: string; dueDate: string; type: "expense" | "income" };
 const initialFutureEntry: FutureEntryFormState = { title: "", amount: "", category: "", dueDate: "", type: "expense" };
@@ -290,7 +290,16 @@ export default function App() {
       return;
     }
     try {
-      const created = await createPayCycle(token, { name: payCycleForm.name, payDay: day });
+      const salaryAmount =
+        payCycleForm.salaryAmount !== "" && payCycleForm.salaryAmount !== null
+          ? parseFloat(payCycleForm.salaryAmount)
+          : undefined;
+      if (salaryAmount !== undefined && (Number.isNaN(salaryAmount) || salaryAmount < 0)) {
+        setPayCycleError("Salário do ciclo inválido");
+        setSavingPayCycle(false);
+        return;
+      }
+      const created = await createPayCycle(token, { name: payCycleForm.name, payDay: day, salaryAmount });
       setPayCycles((prev) => [...prev, created].sort((a, b) => a.payDay - b.payDay));
       setPayCycleForm(initialPayCycle);
     } catch (error: any) {
@@ -311,6 +320,23 @@ export default function App() {
       setExpenses((prev) => prev.map((e) => (e.payCycleId === id ? { ...e, payCycleId: null } : e)));
     } catch (error: any) {
       const message = error?.message || "Erro ao excluir ciclo";
+      setPayCycleError(message);
+    }
+  }
+  async function handleUpdateCycleSalary(id: number) {
+    if (!token) return;
+    const value = prompt("Informe o salário deste ciclo (deixe vazio para remover):");
+    if (value === null) return;
+    const parsed = value.trim() === "" ? null : parseFloat(value);
+    if (parsed !== null && (Number.isNaN(parsed) || parsed < 0)) {
+      setPayCycleError("Valor inválido");
+      return;
+    }
+    try {
+      const updated = await updatePayCycle(token, id, { salaryAmount: parsed === null ? null : parsed });
+      setPayCycles((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
+    } catch (error: any) {
+      const message = error?.message || "Erro ao atualizar salário do ciclo";
       setPayCycleError(message);
     }
   }
@@ -804,22 +830,33 @@ export default function App() {
                 </div>
               </div>
               <form onSubmit={handlePayCycleSubmit} className="space-y-2">
-                <label className="space-y-1 text-sm text-slate-200">
-                  Nome do ciclo
-                  <input
-                    type="text"
-                    value={payCycleForm.name}
-                    onChange={(e) => setPayCycleForm({ ...payCycleForm, name: e.target.value })}
-                    placeholder="Ex: Salário 25"
-                    required
-                    className="input"
-                  />
-                </label>
-                <label className="space-y-1 text-sm text-slate-200">
-                  Dia do mês
-                  <input
-                    type="number"
-                    min="1"
+                  <label className="space-y-1 text-sm text-slate-200">
+                    Nome do ciclo
+                    <input
+                      type="text"
+                      value={payCycleForm.name}
+                      onChange={(e) => setPayCycleForm({ ...payCycleForm, name: e.target.value })}
+                      placeholder="Ex: Salário 25"
+                      required
+                      className="input"
+                    />
+                  </label>
+                  <label className="space-y-1 text-sm text-slate-200">
+                    Salário deste ciclo (R$)
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={payCycleForm.salaryAmount}
+                      onChange={(e) => setPayCycleForm({ ...payCycleForm, salaryAmount: e.target.value })}
+                      placeholder="Ex: 4000"
+                      className="input"
+                    />
+                  </label>
+                  <label className="space-y-1 text-sm text-slate-200">
+                    Dia do mês
+                    <input
+                      type="number"
+                      min="1"
                     max="31"
                     value={payCycleForm.payDay}
                     onChange={(e) => setPayCycleForm({ ...payCycleForm, payDay: e.target.value })}
@@ -840,8 +877,16 @@ export default function App() {
                         <p className="description">
                           {cycle.name} <span className="muted">- dia {cycle.payDay}</span>
                         </p>
+                        {cycle.salaryAmount != null && (
+                          <p className="muted">
+                            Salário deste ciclo: R$ {Number(cycle.salaryAmount).toFixed(2)}
+                          </p>
+                        )}
                       </div>
                       <div className="row">
+                        <button className="button-ghost" onClick={() => handleUpdateCycleSalary(cycle.id)}>
+                          Editar salário
+                        </button>
                         <button className="danger" onClick={() => handleDeletePayCycle(cycle.id)}>
                           Excluir
                         </button>

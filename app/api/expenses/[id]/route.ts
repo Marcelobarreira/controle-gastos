@@ -81,7 +81,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     }
 
     await prisma.expense.delete({ where: { id: expenseId } });
-    return NextResponse.json({}, { status: 204 });
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error("Erro ao excluir despesa", error);
     return NextResponse.json({ message: "Erro interno ao excluir despesa" }, { status: 500 });
